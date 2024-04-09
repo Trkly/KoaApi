@@ -7,6 +7,7 @@ const router = new Router({ prefix: '/pexles' })
  * 获取图片数据列表
  */
 router.get('/list', async (ctx)=>{
+    console.log(ctx)
     ctx.body={
             list:[
                 {

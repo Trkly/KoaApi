@@ -1,8 +1,11 @@
-const listRouter = require('../router/list.route')
 const userRouter = require('../router/user.route')
 const pexlesRouter = require('../router/pexles.route')
+const userManageRouter = require('../router/user-manage.route')
+const roleRouter = require('../router/role.route')
+const permissionRouter = require('../router/permission.route')
+const articleRouter = require('../router/article.route')
 const Koa = require('koa')
-const {koaBody} = require('koa-body')
+const { koaBody } = require('koa-body')
 const errHandler = require('./errHandler')
 const app = new Koa()
 
@@ -31,9 +34,12 @@ app.use(async (ctx, next) => {
 })
 
 app.use(koaBody())
-app.use(listRouter.routes())
 app.use(userRouter.routes())
 app.use(pexlesRouter.routes())
+app.use(userManageRouter.routes())
+app.use(roleRouter.routes())
+app.use(permissionRouter.routes())
+app.use(articleRouter.routes())
 // 统一的错误处理
 app.on('error', errHandler)
 module.exports = app

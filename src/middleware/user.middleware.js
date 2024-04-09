@@ -8,13 +8,11 @@ const {
     userLoginError,
     invalidPassword,
 } = require('../constant/err.type')
-const {has} = require("koa/lib/response");
+const { has } = require("koa/lib/response");
 
 const userValidator = async (ctx, next) => {
-    console.log(ctx.request.body)
+    console.log('user.middleware-userValidator==', ctx.request.body)
     const { username, password } = ctx.request.body
-    console.log(username)
-    console.log(password)
     // 合法性
     if (!username || !password) {
         console.error('用户名或密码为空', ctx.request.body)
@@ -55,7 +53,7 @@ const crpytPassword = async (ctx, next) => {
     const salt = bcrypt.genSaltSync(10)
     // hash保存的是 密文
     const hash = bcrypt.hashSync(password, salt)
-    console.log('加密后的密码是',hash)
+    console.log('加密后的密码是', hash)
     ctx.request.body.password = hash
 
     await next()
@@ -66,8 +64,8 @@ const verifyLogin = async (ctx, next) => {
     const { username, password } = ctx.request.body
 
     try {
-        const res = await getUerInfo({ username })
-
+        const res = await getUerInfo({ username: username })
+        console.log('user.middleware-verifyLogin==', res)
         if (!res) {
             console.error('用户名不存在', { username })
             ctx.app.emit('error', userDoesNotExist, ctx)
@@ -76,6 +74,7 @@ const verifyLogin = async (ctx, next) => {
 
         // 2. 密码是否匹配(不匹配: 报错)
         if (!bcrypt.compareSync(password, res.password)) {
+            console.error('密码不匹配', { password })
             ctx.app.emit('error', invalidPassword, ctx)
             return
         }
